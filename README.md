@@ -1,4 +1,5 @@
 # pyside6-widgets
+<<<<<<< HEAD
 
 Reusable PySide6 GUI components for scientific applications.
 
@@ -138,3 +139,6 @@ MIT License — see [LICENSE](LICENSE) for details.
 Vahid Anari —
 [GitHub](https://github.com/vahid-anari) ·
 [LinkedIn](https://www.linkedin.com/in/vahid-anari/)
+=======
+Reusable PySide6 GUI components — validated numeric inputs, math labels, declarative menu bar, status bar, and dialogs.
+>>>>>>> 592f6bc16e972060604019a0264cffa0e2d74842
