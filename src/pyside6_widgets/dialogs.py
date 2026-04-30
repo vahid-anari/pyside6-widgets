@@ -9,9 +9,10 @@ from __future__ import annotations
 import html
 from enum import Enum, auto
 from typing import Optional
+from pathlib import Path
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QGuiApplication, QTextCursor
+from PySide6.QtGui import QGuiApplication, QTextCursor, QPixmap
 from PySide6.QtWidgets import (
     QDialog,
     QDialogButtonBox,
