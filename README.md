@@ -1,14 +1,12 @@
 # pyside6-widgets
 
+[![PyPI version](https://badge.fury.io/py/pyside6-widgets.svg)](https://pypi.org/project/pyside6-widgets/)
+
 Reusable PySide6 GUI components for scientific applications.
 
 Built from real scientific software, these widgets are production-tested and
 designed to be dropped into any PySide6 project with no external dependencies
 beyond PySide6 itself (plus Matplotlib for the SVG label).
-
-# pyside6-widgets
-
-[![PyPI version](https://badge.fury.io/py/pyside6-widgets.svg)](https://pypi.org/project/pyside6-widgets/)
 
 ## Components
 
@@ -130,7 +128,7 @@ if result == AskResult.YES:
 
 - Python 3.10+
 - PySide6 >= 6.5
-- matplotlib >= 3.7 *(required only for `SvgLabel`)*
+- matplotlib >= 3.7 *(required only for `MathLabel`)*
 - psutil >= 5.9 *(required only for `StatusBarController`)*
 
 ## License
