@@ -60,16 +60,47 @@ def _make_html_label(html_text: str) -> QLabel:
     return label
 
 
+def _try_load_app_icon_pixmap(size: int, icon_path: Optional[str] = None) -> Optional[QPixmap]:
+    """Return the application icon pixmap when the icon file can be loaded.
+
+    Args:
+        size: Requested icon size in pixels.
+        icon_path: Optional path to the icon file. If ``None`` or the file
+            does not exist, returns ``None``.
+
+    Returns:
+        Scaled pixmap if the icon file exists and loads successfully, otherwise
+        ``None``.
+    """
+    if icon_path is None:
+        return None
+
+    path = Path(icon_path)
+    if not path.exists():
+        return None
+
+    pixmap = QPixmap(str(path))
+    if pixmap.isNull():
+        return None
+
+    return pixmap.scaled(
+        size,
+        size,
+        Qt.KeepAspectRatio,
+        Qt.SmoothTransformation,
+    )
+
+
 class TitledDialogBase(QDialog):
     """Common dialog base class with title text, optional icon, and body helpers."""
 
     def __init__(
-        self,
-        title: str,
-        text: str,
-        informative_text: str = "",
-        icon: Optional[DialogIcon] = None,
-        parent: Optional[QWidget] = None,
+            self,
+            title: str,
+            text: str,
+            informative_text: str = "",
+            icon: Optional[DialogIcon] = None,
+            parent: Optional[QWidget] = None,
     ) -> None:
         """Initialize the common titled-dialog layout.
 
@@ -148,12 +179,12 @@ class MessageDialog(TitledDialogBase):
     """Simple informational dialog with a single acknowledgement button."""
 
     def __init__(
-        self,
-        title: str,
-        text: str,
-        informative_text: str = "",
-        icon: Optional[DialogIcon] = None,
-        parent: Optional[QWidget] = None,
+            self,
+            title: str,
+            text: str,
+            informative_text: str = "",
+            icon: Optional[DialogIcon] = None,
+            parent: Optional[QWidget] = None,
     ) -> None:
         """Initialize the message dialog.
 
@@ -190,12 +221,12 @@ class InfoDialog(QDialog):
     """Rich-text dialog for longer informational content."""
 
     def __init__(
-        self,
-        title: str,
-        html_text: str,
-        icon: Optional[DialogIcon] = DialogIcon.INFORMATION,
-        parent: Optional[QWidget] = None,
-        copy_button: bool = True,
+            self,
+            title: str,
+            html_text: str,
+            icon: Optional[DialogIcon] = DialogIcon.INFORMATION,
+            parent: Optional[QWidget] = None,
+            copy_button: bool = True,
     ) -> None:
         """Initialize the rich informational dialog.
 
@@ -264,11 +295,12 @@ class AboutDialog(QDialog):
     """Qt-like dialog for application and author information."""
 
     def __init__(
-        self,
-        title: str,
-        html_text: str,
-        parent: Optional[QWidget] = None,
-        heading: Optional[str] = None,
+            self,
+            title: str,
+            html_text: str,
+            icon_path: Optional[str] = None,
+            parent: Optional[QWidget] = None,
+            heading: Optional[str] = None,
     ) -> None:
         """Initialize the about dialog layout and content.
 
@@ -291,8 +323,10 @@ class AboutDialog(QDialog):
 
         # Use standard information icon
         icon_label = QLabel()
-        std_icon = self.style().standardIcon(QStyle.SP_MessageBoxInformation)
-        pixmap = std_icon.pixmap(64, 64)
+        pixmap = _try_load_app_icon_pixmap(96, icon_path)
+        if pixmap is None:
+            std_icon = self.style().standardIcon(QStyle.SP_MessageBoxInformation)
+            pixmap = std_icon.pixmap(64, 64)
         icon_label.setPixmap(pixmap)
         icon_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
         icon_label.setFixedWidth(max(pixmap.width() + 8, 84))
@@ -327,14 +361,14 @@ class AskDialog(TitledDialogBase):
     """Confirmation dialog returning yes, no, or cancel."""
 
     def __init__(
-        self,
-        title: str,
-        text: str,
-        informative_text: str = "",
-        yes_btn_label: str = "Yes",
-        no_btn_label: Optional[str] = None,
-        cancel_btn_label: str = "Cancel",
-        parent: Optional[QWidget] = None,
+            self,
+            title: str,
+            text: str,
+            informative_text: str = "",
+            yes_btn_label: str = "Yes",
+            no_btn_label: Optional[str] = None,
+            cancel_btn_label: str = "Cancel",
+            parent: Optional[QWidget] = None,
     ) -> None:
         """Initialize the question dialog.
 
@@ -394,10 +428,10 @@ class AskDialog(TitledDialogBase):
 # ---------------------------------------------------------------------------
 
 def show_information(
-    title: str,
-    text: str,
-    informative_text: str = "",
-    parent: Optional[QWidget] = None,
+        title: str,
+        text: str,
+        informative_text: str = "",
+        parent: Optional[QWidget] = None,
 ) -> None:
     """Show an informational message dialog.
 
@@ -412,11 +446,11 @@ def show_information(
 
 
 def show_rich_information(
-    title: str,
-    html_text: str,
-    parent: Optional[QWidget] = None,
-    icon: Optional[DialogIcon] = DialogIcon.INFORMATION,
-    copy_button: bool = True,
+        title: str,
+        html_text: str,
+        parent: Optional[QWidget] = None,
+        icon: Optional[DialogIcon] = DialogIcon.INFORMATION,
+        copy_button: bool = True,
 ) -> None:
     """Show a rich-text informational dialog.
 
@@ -438,10 +472,11 @@ def show_rich_information(
 
 
 def show_about_dialog(
-    title: str,
-    html_text: str,
-    parent: Optional[QWidget] = None,
-    heading: Optional[str] = None,
+        title: str,
+        html_text: str,
+        icon_path: Optional[str] = None,
+        parent: Optional[QWidget] = None,
+        heading: Optional[str] = None,
 ) -> None:
     """Show a Qt-like About dialog.
 
@@ -451,15 +486,15 @@ def show_about_dialog(
         parent: Optional parent widget.
         heading: Optional heading shown above the body content.
     """
-    dlg = AboutDialog(title=title, html_text=html_text, parent=parent, heading=heading)
+    dlg = AboutDialog(title=title, html_text=html_text, icon_path=icon_path, parent=parent, heading=heading)
     dlg.exec()
 
 
 def show_warning(
-    title: str,
-    text: str,
-    informative_text: str = "",
-    parent: Optional[QWidget] = None,
+        title: str,
+        text: str,
+        informative_text: str = "",
+        parent: Optional[QWidget] = None,
 ) -> None:
     """Show a warning message dialog.
 
@@ -474,10 +509,10 @@ def show_warning(
 
 
 def show_critical(
-    title: str,
-    text: str,
-    informative_text: str = "",
-    parent: Optional[QWidget] = None,
+        title: str,
+        text: str,
+        informative_text: str = "",
+        parent: Optional[QWidget] = None,
 ) -> None:
     """Show a critical-error message dialog.
 
@@ -492,13 +527,13 @@ def show_critical(
 
 
 def ask_question(
-    title: str,
-    text: str,
-    informative_text: str = "",
-    yes_btn_label: str = "Yes",
-    no_btn_label: Optional[str] = None,
-    cancel_btn_label: str = "Cancel",
-    parent: Optional[QWidget] = None,
+        title: str,
+        text: str,
+        informative_text: str = "",
+        yes_btn_label: str = "Yes",
+        no_btn_label: Optional[str] = None,
+        cancel_btn_label: str = "Cancel",
+        parent: Optional[QWidget] = None,
 ) -> AskResult:
     """Show a confirmation dialog and return the selected answer.
 
