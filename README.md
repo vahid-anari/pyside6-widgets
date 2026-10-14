@@ -1,5 +1,19 @@
 # pyside6-widgets
 
+> **This package is no longer maintained.** It has been replaced by
+> [sciwidgets](https://github.com/vahid-anari/sciwidgets) (`pip install sciwidgets`),
+> which contains all of these widgets and more.
+>
+> | Old (`pyside6_widgets`) | New |
+> |---|---|
+> | `MathLabel` | `from sciwidgets.labels import MathLabel` |
+> | `NumericLineEdit` | `from sciwidgets.params import NumericLineEdit` |
+> | `MenuBarController`, `StatusBarController` | `from sciwidgets.window import ...` |
+> | dialogs | `from sciwidgets.dialogs import ...` |
+>
+> Some arguments have changed; see the
+> [sciwidgets docs](https://github.com/vahid-anari/sciwidgets#components).
+
 [![PyPI version](https://badge.fury.io/py/pyside6-widgets.svg)](https://pypi.org/project/pyside6-widgets/)
 
 Reusable PySide6 GUI components for scientific applications.
